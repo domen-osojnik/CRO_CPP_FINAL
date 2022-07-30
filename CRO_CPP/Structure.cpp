@@ -7,6 +7,7 @@
 
 #include "Structure.h"
 #include "Operators.h"
+#include <fstream>
 
 #pragma region Performance increase functions
 std::vector<std::string> Structure::increasePerformance1(std::string s, std::vector<std::string> & u)

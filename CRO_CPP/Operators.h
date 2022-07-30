@@ -29,7 +29,9 @@ public:
 #pragma endregion Variables
 
 #pragma region Functions
-    double CRO_PSP(int pop_size, std::string s, double moleCol, double initialKE, double KELossRate);
+    //double CRO_PSP(int pop_size, std::string s, double moleCol, double initialKE, double KELossRate);
+    //double CRO_PSP(int pop_size, std::string s, double moleCol, double initialKE, double KELossRate, int fileName);
+    double CRO_PSP(int pop_size, std::string s, double moleCol, double initialKE, double KELossRate, std::string fileName);
     std::vector<std::vector<std::string> > search_space_creation(std::string s, int pop_size, std::vector<std::string> target);
     void print(std::vector<std::string> direc);
     bool stoppingConditionMet(int max);

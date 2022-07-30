@@ -66,7 +66,8 @@ int main(int argc, const char* argv[]) {
     std::string fileName = "results";
     for (int in = 0; in < 32; in++)
     {
-        fileName = "results" + std::to_string(in) + ".txt";
+        
+        fileName = "results" + std::to_string(in) ;
         Structure struc;
 
         double div = 0, speed = 0;
@@ -77,8 +78,9 @@ int main(int argc, const char* argv[]) {
 
         double energy[NR]; // Vector of size NR
         {
-            
-            myfile.open(fileName, std::ios_base::app);
+            try
+            {
+            myfile.open(fileName + ".txt", std::ios_base::app);
             NSR = 0;
             input = file[in][0];
             target = file[in][1];
@@ -108,8 +110,9 @@ int main(int argc, const char* argv[]) {
                 initialKE = ie;
                 KELossRate = ke;
                 op.target = targetArray;
-
-                energy[i] = op.CRO_PSP(pop_size, input, moleCol, initialKE, KELossRate);
+               
+                    energy[i] = op.CRO_PSP(pop_size, input, moleCol, initialKE, KELossRate, fileName);
+               
                 tempTime = duration_cast<milliseconds>(
                     system_clock::now().time_since_epoch()
                     ).count();
@@ -153,8 +156,9 @@ int main(int argc, const char* argv[]) {
             long long executionTime = (endTime - startTime) / 1000;
             div = (2 * div) / (NR * (pop_size - 1) * pop_size);
             double pSpeed = speed / executionTime;
-            std::cout << "\nSET COMPLETE, WRITING TO FILE.....\n";
 
+            std::cout << "\nSET COMPLETE, WRITING TO FILE.....\n";
+            myfile << "\nSET COMPLETE, WRITING TO FILE.....\n";
             myfile << "Total execution time: " << executionTime << "\n";
             myfile << "---------------------- " << dataSet[in] << " ------------------------\n";
 
@@ -163,10 +167,16 @@ int main(int argc, const char* argv[]) {
 
             myfile << "-------------------------------*******************----------------------------------\n";
             myfile << "-------------------------------*******************----------------------------------\n\n\n";
-
             myfile.close();
+            }
+            catch (const std::exception& e)
+            {
+                std::cerr << e.what() << '\n';
+                std::cout << "Exception occured" << e.what() << '\n';
+                myfile << "Exception occured" << e.what() << '\n';
+            }
         }
     }
-
+    myfile.close();
     return 0;
 }

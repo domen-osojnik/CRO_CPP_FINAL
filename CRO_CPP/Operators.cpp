@@ -9,27 +9,12 @@
 #include <iterator>
 #include <fstream>
 
-double Operators::CRO_PSP(int pop_size, std::string s, double moleCol, double initialKE, double KELossRate)
+double Operators::CRO_PSP(int pop_size, std::string s, double moleCol, double initialKE, double KELossRate,  std::string fileName)
 {
     std::vector<std::vector<std::string> > population = search_space_creation(s, pop_size, target);
-    //population = {};
-    //   
 
-    //std::ifstream is("space_creation.txt");
-    //std::istream_iterator<char> start(is), end;
-    //std::vector<char> characters(start, end);
-    //std::vector<std::string> bomba;
-    //for (int i = 0; i < characters.size(); i)
-    //{   
-    //    bomba = {};
-    //    for (int j = 0; j < 48; j++, i++)
-    //    {
-    //        std::string str(1, characters[i]);
-    //        bomba.push_back(str);
-    //    }
-    //    population.push_back(bomba);
-    //}
-
+    std::ofstream myfile;
+    myfile.open(fileName + "_detailed.txt", std::ios_base::app);
 
     double KE = initialKE;
     double r;
@@ -75,6 +60,9 @@ double Operators::CRO_PSP(int pop_size, std::string s, double moleCol, double in
     int loopcount = 1;
 
     // In java display was used?
+    myfile << "\nInitial Kinetic Energy : " << KE << "\n";
+    myfile << "Alpha = " << alpha << " Beta = " << beta << "\n";
+    myfile << "------------------------------------------------------------------------------\n\n";
     std::cout << "\nInitial Kinetic Energy : " << KE << "\n";
     std::cout << "Alpha = " << alpha << " Beta = " << beta << "\n";
     std::cout << "------------------------------------------------------------------------------\n\n";
@@ -410,7 +398,7 @@ double Operators::CRO_PSP(int pop_size, std::string s, double moleCol, double in
 
         div = sum;
         speed = repairCount;
-
+        myfile << "Hightest attempted " << count << " times... out of " << pop_size << "   div loops diff = " << sum << "  repair call  " << repairCount << "\n\n";
         std::cout << "Hightest attempted " << count << " times... out of " << pop_size << "   div loops diff = " << sum << "  repair call  " << repairCount << "\n\n";
 
         this->struc.getEnergy(sequence, maxStruc);
@@ -438,23 +426,26 @@ double Operators::CRO_PSP(int pop_size, std::string s, double moleCol, double in
             {
                 if (coor[j][0] == coor[k][0] && coor[j][1] == coor[k][1] && coor[j][2] == coor[k][2])
                 {
+                    myfile << j << " =   " << coor[j][0] << " " << coor[j][1] << " " << coor[j][2] << "    match with  " << k << "\n";
                     std::cout << j << " =   " << coor[j][0] << " " << coor[j][1] << " " << coor[j][2] << "    match with  " << k << "\n";
                     match = 1;
                 }
             }
             if (match == 0)
             {
+                myfile << j << " =      " << coor[j][0] << " " << coor[j][1] << " " << coor[j][2] << "\n";
                 std::cout << j << " =      " << coor[j][0] << " " << coor[j][1] << " " << coor[j][2] << "\n";
             }
         }
-
+        myfile << "\n" << loopcount << "\n\n";
         std::cout << "\n" << loopcount << "\n\n";
     }
     catch (const std::exception& e)
     {
         std::cerr << e.what() << '\n';
+        myfile << "Exception occured" << e.what() << '\n';
     }
-
+    myfile.close();
     return maxE;
 }
 
